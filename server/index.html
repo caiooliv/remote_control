@@ -19,13 +19,13 @@
     <input id="button" type="submit" name="button" onclick="myFunction();" value="enter"/>
 
     <script>
-        var socket = io("http://localhost:3000/")
+        var socket = io("http://localhost:1978/")
 
 
     function myFunction(){
         
-        obj = {x:730,y:-120}
-        socket.emit("moveMouse",obj)
+        obj = {key:'a',moddifier:''}
+        socket.emit("typeKey",obj)
 
     };   
     </script>

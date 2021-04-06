@@ -39,7 +39,7 @@ This folder contains the communication server between the computer and the appli
 
 ## TODO list 📑 
 
-- [] Get user IP on front.
-- [] Create user friendly way to run server.
-- [] Change socket lib on fron-end.
-- [] Create splashscreen, icons, and art for the app.
+- [ ] Get user IP on front.
+- [ ] Create user friendly way to run server.
+- [ ] Change socket lib on fron-end.
+- [ ] Create splashscreen, icons, and art for the app.

@@ -2,7 +2,8 @@
 
 Remote control is a mobile app that convert your phone on a controller to your computer. 
 <br/>
-![presentation_gif](./assets/remote.gif)
+
+<img src="https://media.giphy.com/media/GeXywws4uguDiVOVtl/giphy.gif"  />
 
 
 ## Remote_front 📱
@@ -39,7 +40,7 @@ This folder contains the communication server between the computer and the appli
 
 ## TODO list 📑 
 
-- [] Get user IP on front.
-- [] Create user friendly way to run server.
-- [] Change socket lib on fron-end.
-- [] Create splashscreen, icons, and art for the app.
+- [ ] Get user IP on front.
+- [ ] Create user friendly way to run server.
+- [ ] Change socket lib on fron-end.
+- [ ] Create splashscreen, icons, and art for the app.

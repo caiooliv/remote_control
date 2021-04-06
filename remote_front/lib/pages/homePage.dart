@@ -28,22 +28,6 @@ class _HomePageState extends State<HomePage> {
     myFocusNode = FocusNode();
   }
 
-  _getMouseMovement() {
-    var i = _offsets.length - 3;
-    var initalX = _offsets[0].dx;
-    var initalY = _offsets[0].dy;
-
-    var finalX = _offsets[i].dx;
-    var finalY = _offsets[i].dx;
-
-    var distance = {
-      "x": finalX - initalX,
-      "y": finalY - initalY,
-    };
-
-    return (distance);
-  }
-
   @override
   void dispose() {
     keyboardController.dispose();

@@ -1,7 +1,7 @@
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 
-const String URI = "http://baf1a054f9ed.ngrok.io";
+const String URI = "YOUR_URL";
 
 class SocketHandler {
   SocketIO socketIO;

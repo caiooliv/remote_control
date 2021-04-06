@@ -2,7 +2,7 @@
 
 Remote control is a mobile app that convert your phone on a controller to your computer. 
 <br/>
-![presentation_gif](./assets/remote.gif)
+![presentation_gif](./assets/remote_control.gif)
 
 
 ## Remote_front 📱

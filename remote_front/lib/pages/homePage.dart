@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remote_front/MousePainter.dart';
 import 'dart:async';
 import 'package:remote_front/service/socketHandler.dart';
-// import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   Color pickerColor;
   Color currentColor = Color(0xff443a49);
   SocketHandler socketHandler = new SocketHandler();
+  int oldTextLenght = 0;
 
   @override
   void initState() {
@@ -72,36 +73,13 @@ class _HomePageState extends State<HomePage> {
       setState(() => pickerColor = color);
     }
 
-    _sendKeyboardEvent(String text) {}
-
-    _onUpdateMouseEvent() {
-      var i = _offsets.length - 1;
-      var initalX = _offsets[i].dx;
-      var initalY = _offsets[i].dy;
-
-      var finalX = _offsets.last.dx;
-      var finalY = _offsets.last.dx;
-
-      var distance = {
-        "x": finalX - initalX,
-        "y": finalY - initalY,
-      };
-
-      return distance;
-    }
-
     _getUpdatePosition() {
       var i = _offsets.length - 2;
-      var initalX = _offsets[i].dx;
-      var initalY = _offsets[i].dy;
 
-      var finalX = _offsets.last.dx;
-      var finalY = _offsets.last.dx;
-
-      var teste = (_offsets.last - _offsets[i]);
+      var finalOffset = (_offsets.last - _offsets[i]);
       var distance = {
-        "x": teste.dx,
-        "y": teste.dy,
+        "x": finalOffset.dx,
+        "y": finalOffset.dy,
       };
       return distance;
     }
@@ -109,7 +87,37 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+        leading: IconButton(
+            icon: Icon(Icons.color_lens),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Select Color'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            setState(() => pickerColor = null);
+                            Navigator.pop(context);
+                          },
+                          child: Text('🌈')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Ok')),
+                    ],
+                    content: SingleChildScrollView(
+                      child: BlockPicker(
+                        pickerColor: currentColor,
+                        onColorChanged: changeColor,
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
         actions: [
           IconButton(
               icon: Icon(Icons.keyboard),
@@ -137,8 +145,12 @@ class _HomePageState extends State<HomePage> {
                       onPanDown: (details) {
                         this.setState(() {
                           _offsets.clear();
-                          print(details.localPosition);
                           _offsets.add(details.localPosition);
+                        });
+
+                        Timer timer =
+                            new Timer(new Duration(milliseconds: 500), () {
+                          removeFromOffests();
                         });
                       },
                       onPanUpdate: (details) {
@@ -150,7 +162,6 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                       onPanEnd: (details) {
-                        removeFromOffests();
                         this.setState(() {
                           _offsets.add(null);
                         });
@@ -172,6 +183,8 @@ class _HomePageState extends State<HomePage> {
             Visibility(
               visible: isTextVisible,
               child: TextField(
+                autocorrect: false,
+                enableSuggestions: false,
                 style: TextStyle(
                   color: Colors.transparent,
                 ),
@@ -185,10 +198,21 @@ class _HomePageState extends State<HomePage> {
                 onChanged: (text) {
                   var textLength = text.length;
 
-                  socketHandler.typeKey(text[textLength - 1], '');
+                  if (textLength < oldTextLenght || textLength <= 0) {
+                    socketHandler.typeKey('backspace', '');
+                  } else {
+                    if (text[textLength - 1].toUpperCase() ==
+                        text[textLength - 1]) {
+                      socketHandler.typeKey(text[textLength - 1], 'shift');
+                    } else {
+                      socketHandler.typeKey(text[textLength - 1], '');
+                    }
+                  }
+                  oldTextLenght = textLength;
                 },
                 onEditingComplete: () {
                   keyboardController.text = '';
+                  oldTextLenght = 0;
                   FocusScopeNode currentFocus = FocusScope.of(context);
                   if (!currentFocus.hasPrimaryFocus) {
                     currentFocus.unfocus();
@@ -225,20 +249,9 @@ class _HomePageState extends State<HomePage> {
                       width: 15,
                     ),
                     Expanded(
-                      flex: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.white54),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
                       flex: 3,
                       child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           socketHandler.clickButtton('right');
                         },
